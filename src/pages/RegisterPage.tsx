@@ -20,6 +20,7 @@ import {
 } from '../lib/firebase';
 import { apiFetch, setStoredToken } from '../lib/api';
 import { User } from '../types';
+import { MASTER_LOGO_URL } from '../lib/firestoreService';
 
 interface RegisterPageProps {
   onNavigate: (path: string) => void;
@@ -162,8 +163,15 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
       <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-3xl border border-stone-200 shadow-xl shadow-stone-200/50">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white font-black text-2xl flex items-center justify-center mx-auto shadow-md shadow-orange-500/25 border-2 border-amber-300/40">
-            <ShieldCheck className="w-8 h-8" />
+          <div className="flex justify-center pb-1">
+            <img
+              src={MASTER_LOGO_URL}
+              alt="Oritech Computer Logo"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+              className="h-16 sm:h-20 w-auto max-w-[220px] object-contain mx-auto transition-transform hover:scale-102"
+            />
           </div>
           <h2 className="text-2xl font-black text-stone-900 tracking-tight">
             Firebase Account Sign Up

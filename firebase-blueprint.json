@@ -213,16 +213,6 @@
       },
       "required": ["id", "imageUrl", "title"]
     },
-    "BrandLogo": {
-      "title": "BrandLogo",
-      "description": "Institute brand logo image link",
-      "type": "object",
-      "properties": {
-        "logoUrl": { "type": "string" },
-        "updatedAt": { "type": "string" }
-      },
-      "required": []
-    },
     "User": {
       "title": "User",
       "description": "User profile, role assignment, and security access record",
@@ -292,10 +282,6 @@
     "/sliderImages/{sliderId}": {
       "schema": "SliderImage",
       "description": "Homepage slider images"
-    },
-    "/branding/{brandingId}": {
-      "schema": "BrandLogo",
-      "description": "Institute brand logo link"
     }
   }
 }

@@ -64,15 +64,6 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
-    // Branding & Institute Settings
-    match /settings/{settingId} {
-      allow read, write: if true;
-    }
-
-    match /branding/{brandingId} {
-      allow read, write: if true;
-    }
-
     // Default fallback
     match /{document=**} {
       allow read, write: if true;

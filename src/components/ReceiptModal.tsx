@@ -63,9 +63,14 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ payment, student, on
           <div className="border-b-2 border-slate-800 pb-6 flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white font-black text-xl flex items-center justify-center shadow">
-                  O
-                </div>
+                <img
+                  src="/logo/Oritech Logo.png"
+                  alt="Oritech Computer Logo"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                  className="h-12 w-auto max-w-[180px] object-contain"
+                />
                 <div>
                   <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
                     ORITECH COMPUTER TRAINING INSTITUTE

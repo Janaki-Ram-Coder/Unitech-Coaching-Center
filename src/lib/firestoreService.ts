@@ -1820,10 +1820,12 @@ export function fsSubscribeInstituteReviews(callback: (reviews: InstituteReview[
 }
 
 // ----------------------------------------------------
-// INSTITUTE BRANDING (Firestore stores ONLY logo link in 'branding/main')
-// Fixed institute details are maintained in code since they are constant.
+// INSTITUTE BRANDING (Static Master Logo: '/logo/Oritech Logo.png')
+// Branding is maintained statically in the application. Firestore 'branding' collection is completely removed.
 // ----------------------------------------------------
 const BRANDING_STORAGE_KEY = 'oritech_institute_branding';
+
+export const MASTER_LOGO_URL = '/logo/Oritech Logo.png';
 
 export const FIXED_INSTITUTE_DETAILS = {
   instituteName: 'Oritech Computer',
@@ -1838,14 +1840,14 @@ export const FIXED_INSTITUTE_DETAILS = {
 
 export const DEFAULT_BRANDING: InstituteBranding = {
   id: 'main',
-  logoUrl: '',
-  logoIconUrl: '',
+  logoUrl: MASTER_LOGO_URL,
+  logoIconUrl: MASTER_LOGO_URL,
   ...FIXED_INSTITUTE_DETAILS,
   updatedAt: new Date().toISOString(),
 };
 
 export function normalizeBrandingDoc(id: string, raw: any): InstituteBranding {
-  const logoUrl = (raw && typeof raw === 'object' ? (raw.logoUrl || raw.logo || raw.logoLink || '') : '').trim();
+  const logoUrl = (raw && typeof raw === 'object' && raw.logoUrl ? raw.logoUrl : MASTER_LOGO_URL).trim() || MASTER_LOGO_URL;
   const updatedAt = raw && typeof raw === 'object' && raw.updatedAt ? raw.updatedAt : new Date().toISOString();
   return {
     ...DEFAULT_BRANDING,
@@ -1856,119 +1858,17 @@ export function normalizeBrandingDoc(id: string, raw: any): InstituteBranding {
 }
 
 export async function fsGetBrandingSettings(): Promise<InstituteBranding> {
-  try {
-    const snap = await getDoc(doc(db, 'branding', 'main'));
-    if (snap.exists()) {
-      const data = snap.data();
-      const logoUrl = (data?.logoUrl || '').trim();
-      const result: InstituteBranding = {
-        ...DEFAULT_BRANDING,
-        id: snap.id,
-        logoUrl,
-        updatedAt: data?.updatedAt || new Date().toISOString(),
-      };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(BRANDING_STORAGE_KEY, JSON.stringify(result));
-      }
-      return result;
-    }
-  } catch (_) {}
-
-  try {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(BRANDING_STORAGE_KEY);
-      if (stored) {
-        return normalizeBrandingDoc('main', JSON.parse(stored));
-      }
-    }
-  } catch (_) {}
   return DEFAULT_BRANDING;
 }
 
 export function fsSubscribeBrandingSettings(callback: (branding: InstituteBranding) => void): () => void {
-  const readAndNotify = () => {
-    try {
-      if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem(BRANDING_STORAGE_KEY);
-        if (stored) {
-          callback(normalizeBrandingDoc('main', JSON.parse(stored)));
-          return;
-        }
-      }
-    } catch (_) {}
-    callback(DEFAULT_BRANDING);
-  };
-
-  readAndNotify();
-
-  let unsubFirestore = () => {};
-  try {
-    unsubFirestore = onSnapshot(
-      doc(db, 'branding', 'main'),
-      (snapshot) => {
-        if (snapshot.exists()) {
-          const liveData = normalizeBrandingDoc(snapshot.id, snapshot.data());
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(BRANDING_STORAGE_KEY, JSON.stringify(liveData));
-          }
-          callback(liveData);
-        } else {
-          callback(DEFAULT_BRANDING);
-        }
-      },
-      () => {}
-    );
-  } catch (_) {}
-
-  if (typeof window !== 'undefined') {
-    const handleCustomChange = (e: any) => {
-      if (e.detail) {
-        callback(normalizeBrandingDoc('main', e.detail));
-      } else {
-        readAndNotify();
-      }
-    };
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === BRANDING_STORAGE_KEY) {
-        readAndNotify();
-      }
-    };
-
-    window.addEventListener('oritech_branding_updated', handleCustomChange);
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      unsubFirestore();
-      window.removeEventListener('oritech_branding_updated', handleCustomChange);
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }
-  return () => {
-    unsubFirestore();
-  };
+  callback(DEFAULT_BRANDING);
+  return () => {};
 }
 
 export async function fsSaveBrandingSettings(branding: { logoUrl?: string } | Partial<InstituteBranding>): Promise<InstituteBranding> {
-  const logoUrl = (branding.logoUrl || '').trim();
+  const logoUrl = (branding.logoUrl || '').trim() || MASTER_LOGO_URL;
   const timestamp = new Date().toISOString();
-
-  // ONLY store logoUrl and updatedAt in Firestore branding collection
-  const firestoreDoc = {
-    logoUrl,
-    updatedAt: timestamp,
-  };
-
-  try {
-    // Exact overwrite so no extra institute fields are stored in Firestore
-    await setDoc(doc(db, 'branding', 'main'), firestoreDoc);
-  } catch (err) {
-    console.warn('Firestore branding save error:', err);
-  }
-
-  // Remove legacy settings document if present
-  try {
-    await deleteDoc(doc(db, 'settings', 'branding')).catch(() => {});
-  } catch (_) {}
 
   const fullBranding: InstituteBranding = {
     ...DEFAULT_BRANDING,
@@ -1986,17 +1886,17 @@ export async function fsSaveBrandingSettings(branding: { logoUrl?: string } | Pa
 }
 
 /**
- * Purge and remove non-essential or obsolete collections (like brandingSettings, test) from Firestore
+ * Purge and remove non-essential or obsolete collections (including 'branding', 'brandingSettings', 'test', 'settings') from Firestore
  * so the database stays completely clean without stray documents or unused collections.
  */
 export async function fsCleanupObsoleteCollections(): Promise<void> {
-  const obsoleteCollections = ['brandingSettings', 'test', 'settings'];
+  const obsoleteCollections = ['branding', 'brandingSettings', 'test', 'settings'];
   for (const colName of obsoleteCollections) {
     try {
       const snap = await getDocs(collection(db, colName)).catch(() => null);
       if (snap && !snap.empty) {
         for (const d of snap.docs) {
-          await fsDeleteDocumentDirect(colName, d.id);
+          await fsDeleteDocumentDirect(colName, d.id).catch(() => {});
         }
       }
     } catch (_) {
@@ -2004,21 +1904,10 @@ export async function fsCleanupObsoleteCollections(): Promise<void> {
     }
   }
 
-  // Ensure 'branding/main' doc contains ONLY logoUrl and updatedAt
+  // Explicitly purge 'branding/main'
   try {
-    const brandingSnap = await getDoc(doc(db, 'branding', 'main')).catch(() => null);
-    if (brandingSnap && brandingSnap.exists()) {
-      const data = brandingSnap.data();
-      const keys = Object.keys(data || {});
-      const hasExtraFields = keys.some((k) => k !== 'logoUrl' && k !== 'updatedAt');
-      if (hasExtraFields) {
-        const logoUrl = (data?.logoUrl || data?.logo || '').trim();
-        await setDoc(doc(db, 'branding', 'main'), {
-          logoUrl,
-          updatedAt: data?.updatedAt || new Date().toISOString(),
-        });
-      }
-    }
+    await fsDeleteDocumentDirect('branding', 'main').catch(() => {});
+    await deleteDoc(doc(db, 'branding', 'main')).catch(() => {});
   } catch (_) {}
 }
 

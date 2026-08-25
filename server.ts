@@ -2796,15 +2796,15 @@ app.get('/api/settings/branding', (req: Request, res: Response) => {
   const db = readDb();
   const defaultBranding = {
     id: 'branding-main',
-    logoUrl: '',
-    logoIconUrl: '',
-    instituteName: 'UNITECH',
+    logoUrl: '/logo/Oritech Logo.png',
+    logoIconUrl: '/logo/Oritech Logo.png',
+    instituteName: 'Oritech Computer',
     tagline: 'Computer Institute',
     stampUrl: '',
-    contactPhone: '+91 98765 43210',
-    contactEmail: 'info@unitech.edu',
+    contactPhone: '+91 9437235124',
+    contactEmail: 'info@oritech.edu',
     headerNotice: 'ISO 9001:2015 Certified Computer Training Institute • Admissions Open for 2026 Batches',
-    address: 'TechHub Complex, 2nd Floor, Opposite Central Bus Stand, City Center',
+    address: 'Sharma Complex, Beside Hotel Jyoti Mahal, Convent road, New Colony, Rayagada-765001, Odisha',
     updatedAt: new Date().toISOString(),
   };
   res.json(db.branding || defaultBranding);
@@ -2816,15 +2816,15 @@ app.post('/api/settings/branding', authenticateToken, requireAdmin, (req: Authen
 
   const current = db.branding || {
     id: 'branding-main',
-    logoUrl: '',
-    logoIconUrl: '',
-    instituteName: 'UNITECH',
+    logoUrl: '/logo/Oritech Logo.png',
+    logoIconUrl: '/logo/Oritech Logo.png',
+    instituteName: 'Oritech Computer',
     tagline: 'Computer Institute',
     stampUrl: '',
-    contactPhone: '+91 98765 43210',
-    contactEmail: 'info@unitech.edu',
+    contactPhone: '+91 9437235124',
+    contactEmail: 'info@oritech.edu',
     headerNotice: 'ISO 9001:2015 Certified Computer Training Institute • Admissions Open for 2026 Batches',
-    address: 'TechHub Complex, 2nd Floor, Opposite Central Bus Stand, City Center',
+    address: 'Sharma Complex, Beside Hotel Jyoti Mahal, Convent road, New Colony, Rayagada-765001, Odisha',
   };
 
   const updated = {
