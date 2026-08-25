@@ -45,9 +45,6 @@ function ensureDataDirExists() {
 }
 
 export function getInitialData(): DatabaseSchema {
-  const adminPasswordHash = bcrypt.hashSync('admin123', 10);
-  const studentPasswordHash = bcrypt.hashSync('student123', 10);
-
   const courses: Course[] = [
     {
       id: 'course-1',
@@ -621,11 +618,14 @@ export function getInitialData(): DatabaseSchema {
 
   const users: User[] = [
     {
-      id: 'admin-user-1',
-      username: 'admin',
+      id: 'fb-5XsSoEIkZEXRQmmIlKIShEjOYkC2',
+      username: 'rajoritech@gmail.com',
       role: 'admin',
-      name: 'System Administrator',
-      email: 'admin@oritech.edu'
+      name: 'Raj Oritech (Admin)',
+      email: 'rajoritech@gmail.com',
+      phone: '+91 98278 54088',
+      isVerified: true,
+      profileCompleted: true
     }
   ];
 

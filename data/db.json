@@ -1,11 +1,15 @@
 {
   "users": [
     {
-      "id": "admin-user-1",
-      "username": "admin",
+      "id": "fb-5XsSoEIkZEXRQmmIlKIShEjOYkC2",
+      "username": "rajoritech@gmail.com",
       "role": "admin",
-      "name": "System Administrator",
-      "email": "admin@unitech.edu"
+      "name": "Raj Oritech (Admin)",
+      "email": "rajoritech@gmail.com",
+      "phone": "+91 98278 54088",
+      "isVerified": true,
+      "profileCompleted": true,
+      "createdAt": "2026-08-25T03:55:00.000Z"
     },
     {
       "id": "stu-user-101",
@@ -49,23 +53,6 @@
         "course-2"
       ],
       "profileCompleted": true
-    },
-    {
-      "id": "fb-z6g6TyClkGMZhFJA8vq0gDOeizs1",
-      "username": "rjanaki696@gmail.com",
-      "role": "student",
-      "name": "Janaki Ram",
-      "email": "rjanaki696@gmail.com",
-      "phone": "9827854088",
-      "studentId": "std-1786685629354",
-      "rollNumber": "UNI-2026-105",
-      "isVerified": true,
-      "profileCompleted": true,
-      "createdAt": "2026-08-14T05:33:49.354Z",
-      "selectedCourseIds": [
-        "course-1",
-        "course-4"
-      ]
     },
     {
       "id": "fb-aZdWPaXK5ENiQskMITDJVm3Edu82",

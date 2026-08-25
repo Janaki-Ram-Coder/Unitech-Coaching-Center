@@ -79,7 +79,7 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
 
   if (isDbNotFound) {
     console.warn(
-      `[Firestore Note] Database '(default)' not yet created in Firebase Project 'unitechcoachingcenter'. Go to https://console.firebase.google.com/project/unitechcoachingcenter/firestore and click 'Create database'.`
+      `[Firestore Note] Database '(default)' not yet created in Firebase Project '${firebaseConfig.projectId}'. Go to https://console.firebase.google.com/project/${firebaseConfig.projectId}/firestore and click 'Create database'.`
     );
   } else {
     console.warn('Firestore Operation Notice:', JSON.stringify(errInfo));
@@ -151,7 +151,7 @@ function toFirestoreRestValue(val: any): any {
  */
 export async function fsRestSaveDocument(collectionName: string, docId: string, data: any): Promise<boolean> {
   const apiKey = firebaseConfig.apiKey;
-  const projectId = firebaseConfig.projectId || 'unitechcoachingcenter';
+  const projectId = firebaseConfig.projectId || 'saisoftware-c8f3f';
   const databaseId = 'default';
   if (!apiKey || !projectId) return false;
 
@@ -232,7 +232,7 @@ export async function fsDeleteDocumentDirect(collectionName: string, docId: stri
     setTimeout(async () => {
       if (!resolved) {
         const apiKey = firebaseConfig.apiKey;
-        const projectId = firebaseConfig.projectId || 'unitechcoachingcenter';
+        const projectId = firebaseConfig.projectId || 'saisoftware-c8f3f';
         try {
           await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/default/documents/${collectionName}/${docId}?key=${apiKey}`, {
             method: 'DELETE',
@@ -945,7 +945,7 @@ export async function fsInspectFirestore(): Promise<{
     collections: results,
     isDatabaseNotFound: dbNotFound,
     globalError: dbNotFound
-      ? "Database '(default)' has not been created yet in Firebase Console for project 'unitechcoachingcenter'."
+      ? `Database '(default)' has not been created yet in Firebase Console for project '${firebaseConfig.projectId}'.`
       : undefined,
   };
 }
@@ -1054,7 +1054,7 @@ export async function fsTestFirestoreConnection(): Promise<{
       studentsCount: 0,
       isDatabaseNotFound: isDbNotFound,
       error: isDbNotFound
-        ? "Firestore Database '(default)' not created yet in project 'unitechcoachingcenter'. Click to create it in Firebase Console."
+        ? `Firestore Database '(default)' not created yet in project '${firebaseConfig.projectId}'. Click to create it in Firebase Console.`
         : raw || 'Permission denied: Check Firestore Security Rules in Firebase Console',
     };
   }
@@ -2044,5 +2044,123 @@ export async function fsCheckFirestoreConnection(): Promise<{ connected: boolean
     };
   }
 }
+
+// -------------------------------------------------------------
+// FIRESTORE USERS & ACCESS CONTROL REPOSITORY
+// -------------------------------------------------------------
+
+export const ADMIN_FIREBASE_UID = '5XsSoEIkZEXRQmmIlKIShEjOYkC2';
+export const ADMIN_EMAIL = 'rajoritech@gmail.com';
+
+/**
+ * Ensures the administrator user record is created and maintained in Cloud Firestore /users collection
+ * with role 'admin' for rajoritech@gmail.com.
+ */
+export async function fsEnsureAdminUserInFirestore(customData?: Partial<User>): Promise<User> {
+  const adminProfile: User = {
+    id: `fb-${ADMIN_FIREBASE_UID}`,
+    username: ADMIN_EMAIL,
+    email: ADMIN_EMAIL,
+    role: 'admin',
+    name: customData?.name || 'Raj Oritech (Admin)',
+    phone: customData?.phone || '+91 98278 54088',
+    avatar: customData?.avatar || undefined,
+    isVerified: true,
+    profileCompleted: true,
+    createdAt: customData?.createdAt || '2026-08-25T03:55:00.000Z',
+  };
+
+  const docPayload = {
+    ...adminProfile,
+    uid: ADMIN_FIREBASE_UID,
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Write ONLY single canonical Auth UID document in /users/{ADMIN_FIREBASE_UID}
+  await fsWriteDocumentDirect('users', ADMIN_FIREBASE_UID, docPayload).catch(() => false);
+
+  // Remove any duplicate document keyed by email
+  await fsDeleteDocumentDirect('users', ADMIN_EMAIL).catch(() => {});
+
+  return adminProfile;
+}
+
+/**
+ * Fetch user document from Firestore by UID or email.
+ */
+export async function fsGetFirestoreUser(idOrEmail: string): Promise<User | null> {
+  const clean = (idOrEmail || '').trim().toLowerCase();
+  if (!clean) return null;
+
+  try {
+    // 1. Direct doc lookup by ID / UID
+    const directId = clean.replace(/^fb-/, '');
+    const snap = await getDoc(doc(db, 'users', directId)).catch(() => null);
+    if (snap && snap.exists()) {
+      return snap.data() as User;
+    }
+
+    // 2. Query by email field
+    const q = query(collection(db, 'users'), where('email', '==', clean));
+    const qSnap = await getDocs(q).catch(() => null);
+    if (qSnap && !qSnap.empty) {
+      return qSnap.docs[0].data() as User;
+    }
+  } catch (err) {
+    console.warn('[Firestore getUser error]:', err);
+  }
+
+  // If query is for rajoritech@gmail.com, return admin fallback
+  if (clean === ADMIN_EMAIL || clean === ADMIN_FIREBASE_UID || clean === `fb-${ADMIN_FIREBASE_UID}`) {
+    return {
+      id: `fb-${ADMIN_FIREBASE_UID}`,
+      username: ADMIN_EMAIL,
+      email: ADMIN_EMAIL,
+      role: 'admin',
+      name: 'Raj Oritech (Admin)',
+      phone: '+91 98278 54088',
+      isVerified: true,
+      profileCompleted: true,
+      createdAt: '2026-08-25T03:55:00.000Z',
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Saves or updates a user document in Firestore /users collection (strictly single document by UID).
+ */
+export async function fsSaveFirestoreUser(user: User): Promise<boolean> {
+  if (!user || !user.id) return false;
+  const docId = user.id.replace(/^fb-/, '');
+  const payload = {
+    ...user,
+    updatedAt: new Date().toISOString(),
+  };
+
+  return await fsWriteDocumentDirect('users', docId, payload);
+}
+
+/**
+ * Purges duplicate documents and old/revoked admin user records from Firestore.
+ */
+export async function fsCleanOldAdminFromFirestore(): Promise<void> {
+  const obsoleteIds = [
+    'rajoritech@gmail.com', // Remove duplicate email-keyed document
+    'I9byZB089LRUj2Ihi1va42IQq7k1',
+    'fb-I9byZB089LRUj2Ihi1va42IQq7k1',
+    'hbysEycvlMYNGTCa0G0OvQSVbg73',
+    'fb-hbysEycvlMYNGTCa0G0OvQSVbg73',
+    'rjanaki696@gmail.com',
+  ];
+
+  for (const id of obsoleteIds) {
+    try {
+      await fsDeleteDocumentDirect('users', id).catch(() => {});
+    } catch (_) {}
+  }
+}
+
 
 

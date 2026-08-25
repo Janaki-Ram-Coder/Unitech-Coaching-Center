@@ -222,9 +222,33 @@
         "updatedAt": { "type": "string" }
       },
       "required": []
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile, role assignment, and security access record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "student"] },
+        "phone": { "type": "string" },
+        "avatar": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "profileCompleted": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "email", "role"]
     }
   },
   "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User authentication accounts and administrator role mappings"
+    },
     "/students/{studentId}": {
       "schema": "Student",
       "description": "Admitted students directory"

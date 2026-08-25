@@ -1,6 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Users & Roles collection
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
     // Students collection
     match /students/{studentId} {
       allow read, write: if true;

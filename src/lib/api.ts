@@ -43,6 +43,8 @@ import {
   fsSaveInstituteReview,
   fsGetBrandingSettings,
   fsSaveBrandingSettings,
+  fsEnsureAdminUserInFirestore,
+  fsCleanOldAdminFromFirestore,
 } from './firestoreService';
 
 const TOKEN_KEY = 'unitech_jwt_token';
@@ -97,25 +99,6 @@ export async function handleDirectFirestore<T>(endpoint: string, options: Reques
     const cleanUser = (username || '').trim().toLowerCase();
     const rawPass = (password || '').trim();
 
-    // Check Admin Login
-    if (
-      (cleanUser === 'admin' || cleanUser === 'admin@oritech.edu' || cleanUser === 'admin@unitech.edu') &&
-      (rawPass === 'admin123' || rawPass === 'admin')
-    ) {
-      const adminUser: User = {
-        id: 'admin-1',
-        username: 'admin',
-        role: 'admin',
-        name: 'Master Admin',
-        email: 'admin@oritech.edu',
-        phone: '+91 9437235124',
-        isVerified: true,
-        profileCompleted: true,
-      };
-      setStoredUser(adminUser);
-      return { token: 'ori-admin-token-live', user: adminUser } as T;
-    }
-
     // Check Registered Student Login from Firestore (by Roll Number, Email, or Username)
     const students = await fsGetStudents();
     const matchedStudent = students.find((s) => {
@@ -165,7 +148,31 @@ export async function handleDirectFirestore<T>(endpoint: string, options: Reques
     const cleanEmail = (email || '').trim().toLowerCase();
     const studentAvatar = (profileLink || avatar || '').trim() || undefined;
 
-    // Check existing student in Firestore with bulletproof safe checks
+    // 1. Check if admin user - ONLY rajoritech@gmail.com is authorized as Administrator
+    const isAdminUser =
+      cleanEmail === 'rajoritech@gmail.com' ||
+      uid === '5XsSoEIkZEXRQmmIlKIShEjOYkC2';
+
+    if (isAdminUser) {
+      const adminUser: User = {
+        id: `fb-${uid || '5XsSoEIkZEXRQmmIlKIShEjOYkC2'}`,
+        username: 'rajoritech@gmail.com',
+        role: 'admin',
+        name: name || 'Raj Oritech (Admin)',
+        email: 'rajoritech@gmail.com',
+        phone: phone || '+91 98278 54088',
+        avatar: studentAvatar,
+        isVerified: true,
+        profileCompleted: true,
+      };
+      setStoredUser(adminUser);
+      // Persist /users record in Firestore for highest security and access control
+      fsEnsureAdminUserInFirestore(adminUser).catch(() => {});
+      fsCleanOldAdminFromFirestore().catch(() => {});
+      return { token: `fb-token-${uid || '5XsSoEIkZEXRQmmIlKIShEjOYkC2'}`, user: adminUser } as T;
+    }
+
+    // 2. Check existing student in Firestore with bulletproof safe checks
     const students = await fsGetStudents();
     const existingStudent = students.find((s) => {
       if (!s) return false;
@@ -197,23 +204,6 @@ export async function handleDirectFirestore<T>(endpoint: string, options: Reques
       };
       setStoredUser(studentUser);
       return { token: `fb-token-${uid || existingStudent.id}`, user: studentUser } as T;
-    }
-
-    // Check if admin email
-    if (cleanEmail === 'admin@oritech.edu' || cleanEmail === 'admin@unitech.edu' || cleanEmail === 'rjanaki696@gmail.com') {
-      const adminUser: User = {
-        id: uid || 'admin-uid',
-        username: cleanEmail ? cleanEmail.split('@')[0] : 'admin',
-        role: 'admin',
-        name: name || 'Institute Administrator',
-        email: cleanEmail,
-        phone: phone || '',
-        avatar: studentAvatar,
-        isVerified: true,
-        profileCompleted: true,
-      };
-      setStoredUser(adminUser);
-      return { token: `fb-token-${uid || 'admin'}`, user: adminUser } as T;
     }
 
     // New student auto-creation

@@ -11,7 +11,7 @@ import {
   KeyRound,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { auth, signInWithEmailAndPassword, sendPasswordResetEmail } from '../lib/firebase';
+import { auth, signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from '../lib/firebase';
 import { apiFetch, setStoredToken } from '../lib/api';
 import { User, InstituteBranding } from '../types';
 import { fsSubscribeBrandingSettings, DEFAULT_BRANDING } from '../lib/firestoreService';
@@ -66,8 +66,37 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     const rawPass = password.trim();
 
     try {
-      // 1. Direct Auth Check (checks Admin and registered Student records in Firestore / backend)
-      try {
+      // 1. Email-based login (Admin & Registered Email students) -> Authenticate with Firebase Auth first
+      if (cleanInput.includes('@')) {
+        let fbUser;
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, cleanInput, rawPass);
+          fbUser = userCredential.user;
+        } catch (fbLoginErr: any) {
+          throw fbLoginErr;
+        }
+
+        if (!fbUser) {
+          throw new Error('Authentication failed. Please verify your credentials.');
+        }
+
+        // Synchronize authenticated Firebase user session
+        const syncRes = await apiFetch<{ token: string; user: User }>('/api/auth/firebase-sync', {
+          method: 'POST',
+          body: JSON.stringify({
+            uid: fbUser.uid,
+            email: fbUser.email || cleanInput,
+            name: fbUser.displayName || (cleanInput === 'rajoritech@gmail.com' ? 'Raj Oritech (Admin)' : ''),
+          }),
+        });
+
+        if (syncRes.token && syncRes.user) {
+          setStoredToken(syncRes.token);
+          onLoginSuccess(syncRes.user);
+          return;
+        }
+      } else {
+        // 2. Roll Number based student login (e.g. UNI-2026-101)
         const directRes = await apiFetch<{ token: string; user: User }>('/api/auth/login', {
           method: 'POST',
           body: JSON.stringify({ username: cleanInput, password: rawPass }),
@@ -79,34 +108,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           onLoginSuccess(directRes.user);
           return;
         }
-      } catch (directErr: any) {
-        // If it's a specific password error for an existing student, show it immediately
-        if (directErr?.message && directErr.message.includes('Incorrect password')) {
-          setError(directErr.message);
-          setLoading(false);
-          return;
-        }
-        // Otherwise continue to Firebase Auth fallback if email format
-      }
-
-      // 2. Direct Firebase Authentication (if email provided)
-      const userCredential = await signInWithEmailAndPassword(auth, cleanInput, rawPass);
-      const fbUser = userCredential.user;
-
-      // 3. Synchronize with backend session
-      const syncRes = await apiFetch<{ token: string; user: User }>('/api/auth/firebase-sync', {
-        method: 'POST',
-        body: JSON.stringify({
-          uid: fbUser.uid,
-          email: fbUser.email || cleanInput,
-          name: fbUser.displayName || '',
-        }),
-      });
-
-      if (syncRes.token && syncRes.user) {
-        setStoredToken(syncRes.token);
-        onLoginSuccess(syncRes.user);
-        return;
       }
     } catch (err: any) {
       let msg = 'Authentication failed. Please check your credentials and password.';
@@ -142,7 +143,29 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     const cleanResetEmail = resetEmail.trim().toLowerCase();
 
     try {
-      await sendPasswordResetEmail(auth, cleanResetEmail);
+      try {
+        await sendPasswordResetEmail(auth, cleanResetEmail);
+      } catch (sdkErr: any) {
+        // Fallback to direct Firebase Auth REST endpoint
+        const apiKey = auth.config?.apiKey || 'AIzaSyDqzEkqLvmc_kUhHivls9gY7NXzOmVIGt0';
+        const restRes = await fetch(
+          `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              requestType: 'PASSWORD_RESET',
+              email: cleanResetEmail,
+            }),
+          }
+        );
+
+        if (!restRes.ok) {
+          const restData = await restRes.json().catch(() => ({}));
+          throw new Error(restData?.error?.message || sdkErr?.message || 'Password reset request failed');
+        }
+      }
+
       // Immediately redirect to login screen with success banner and prefilled email
       setEmail(cleanResetEmail);
       setBannerMsg(

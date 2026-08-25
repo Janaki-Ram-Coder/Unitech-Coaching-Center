@@ -16,6 +16,7 @@ import {
 import {
   initializeFirestore,
   getFirestore,
+  setLogLevel,
   doc,
   setDoc,
   getDoc,
@@ -39,17 +40,22 @@ export const firebaseConfig = {
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
+// Suppress internal WebChannel fallback transport warnings
+try {
+  setLogLevel('error');
+} catch (_) {}
+
 export const firestoreDatabaseId = 'default';
 
-// Initialize Firestore with resilient long-polling transport and specified databaseId ('default')
+// Initialize Firestore with robust long-polling transport to prevent WebChannel streaming drops in iframe/proxy environments
 let firestoreInstance;
 try {
   firestoreInstance = initializeFirestore(
     app,
     {
       experimentalForceLongPolling: true,
-      experimentalAutoDetectLongPolling: true,
-    },
+      useFetchStreams: false,
+    } as any,
     firestoreDatabaseId
   );
 } catch (_) {

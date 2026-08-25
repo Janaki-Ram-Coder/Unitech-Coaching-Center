@@ -11,7 +11,6 @@ import {
   RefreshCw,
   Users,
   FileText,
-  KeyRound,
   Award,
   Inbox,
   MessageSquare,

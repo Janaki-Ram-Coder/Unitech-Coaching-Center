@@ -9,6 +9,8 @@ import {
   fsGetCourses,
   fsGetSliderImages,
   fsCleanupObsoleteCollections,
+  fsEnsureAdminUserInFirestore,
+  fsCleanOldAdminFromFirestore,
 } from './lib/firestoreService';
 
 import { Navbar } from './components/Navbar';
@@ -177,6 +179,9 @@ export default function App() {
         if (firestoreSliders && firestoreSliders.length > 0) {
           setSliderImages(firestoreSliders);
         }
+        // Ensure Firestore /users collection contains rajoritech@gmail.com admin and clean old admins
+        fsEnsureAdminUserInFirestore().catch(() => {});
+        fsCleanOldAdminFromFirestore().catch(() => {});
         // Purge obsolete Firestore collections (like brandingSettings, test) in the background
         fsCleanupObsoleteCollections().catch(() => {});
       } catch (err) {
