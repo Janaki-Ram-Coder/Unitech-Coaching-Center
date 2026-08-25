@@ -113,8 +113,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                 alt={slide.title}
                 className="w-full h-full object-cover opacity-75 sm:opacity-70 transform scale-105 transition-transform duration-10000"
               />
-              {/* Refined minimalist gradient overlay */}
+              {/* Base contrast gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-900/40 to-stone-950/25" />
+              {/* Yellow, orange, and transparent gradient effect (20-30% opacity) */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-yellow-400/25 via-orange-500/20 to-transparent pointer-events-none" />
               <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-8 text-center">
                 <div className="max-w-3xl flex flex-col items-center justify-center my-auto">
                   <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight sm:leading-snug drop-shadow-lg text-center">
@@ -165,8 +167,11 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </section>
       ) : (
-        <section className="relative w-full h-[calc(100svh-97px)] min-h-[375px] max-h-[515px] sm:h-[465px] lg:h-[505px] overflow-hidden bg-gradient-to-br from-stone-950 via-stone-900 to-amber-950/80 flex items-center justify-center text-white px-4">
-          <div className="max-w-3xl flex flex-col items-center justify-center text-center space-y-5">
+        <section className="relative w-full h-[calc(100svh-97px)] min-h-[375px] max-h-[515px] sm:h-[465px] lg:h-[505px] overflow-hidden bg-stone-950 flex items-center justify-center text-white px-4">
+          {/* Yellow, orange, and transparent gradient effect (20-30% opacity) */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-yellow-400/25 via-orange-500/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-900/30 to-stone-950/20 pointer-events-none" />
+          <div className="relative z-10 max-w-3xl flex flex-col items-center justify-center text-center space-y-5">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-black uppercase tracking-wider backdrop-blur">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>Premier Computer Training Center</span>
