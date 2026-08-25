@@ -1,0 +1,6 @@
+{
+  "name": "Oritech Computer Institute",
+  "description": "Student and Admin Management System with course catalog, fee tracking, public certificate verify portal, certification uploader, and student learning portal for Oritech Computer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

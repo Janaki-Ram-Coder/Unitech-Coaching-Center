@@ -1,0 +1,277 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Student admission profile and enrollment record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "rollNumber": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "avatar": { "type": "string" },
+        "profileLink": { "type": "string" },
+        "courseId": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "totalFee": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "dueAmount": { "type": "number" },
+        "joinedDate": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Completed", "Dropped"] },
+        "batchTiming": { "type": "string" },
+        "username": { "type": "string" }
+      },
+      "required": ["id", "rollNumber", "name", "email", "courseId", "courseTitle", "totalFee"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Coaching institute course offering",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "duration": { "type": "string" },
+        "fee": { "type": "number" },
+        "description": { "type": "string" },
+        "popular": { "type": "boolean" },
+        "thumbnail": { "type": "string" },
+        "prerequisites": { "type": "string" },
+        "level": { "type": "string" }
+      },
+      "required": ["id", "code", "title", "fee"]
+    },
+    "PaymentInstallment": {
+      "title": "PaymentInstallment",
+      "description": "Student fee installment and receipt record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "receiptNo": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "rollNumber": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "amount": { "type": "number" },
+        "paymentDate": { "type": "string" },
+        "paymentMethod": { "type": "string" },
+        "nextDueDate": { "type": "string" },
+        "remarks": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "receiptNo", "studentId", "studentName", "amount", "paymentDate"]
+    },
+    "StudentResult": {
+      "title": "StudentResult",
+      "description": "Student semester or exam mark sheet result",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "rollNumber": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "examTitle": { "type": "string" },
+        "examDate": { "type": "string" },
+        "totalMarks": { "type": "number" },
+        "obtainedMarks": { "type": "number" },
+        "percentage": { "type": "number" },
+        "grade": { "type": "string" },
+        "status": { "type": "string" },
+        "remarks": { "type": "string" }
+      },
+      "required": ["id", "studentName", "rollNumber", "examTitle", "totalMarks", "obtainedMarks"]
+    },
+    "CertificateRecord": {
+      "title": "CertificateRecord",
+      "description": "Issued student completion certificate",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "certificateNumber": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "rollNumber": { "type": "string" },
+        "courseId": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "issueDate": { "type": "string" },
+        "grade": { "type": "string" },
+        "status": { "type": "string" },
+        "verificationUrl": { "type": "string" }
+      },
+      "required": ["id", "certificateNumber", "studentName", "rollNumber", "courseTitle", "issueDate"]
+    },
+    "LearningResource": {
+      "title": "LearningResource",
+      "description": "Course uploaded video lectures, notes, and PDF links",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "courseId": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "type": { "type": "string", "enum": ["video", "pdf"] },
+        "url": { "type": "string" },
+        "pdfUrl": { "type": "string" },
+        "pdfTitle": { "type": "string" },
+        "moduleName": { "type": "string" },
+        "description": { "type": "string" },
+        "durationMinutes": { "type": "number" },
+        "fileSizeMb": { "type": "number" },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "uploadedDate": { "type": "string" }
+      },
+      "required": ["id", "title", "courseId", "type", "url"]
+    },
+    "NotificationAnnouncement": {
+      "title": "NotificationAnnouncement",
+      "description": "Institute notice board announcement and broadcast",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "category": { "type": "string" },
+        "date": { "type": "string" },
+        "priority": { "type": "string" },
+        "targetRole": { "type": "string" }
+      },
+      "required": ["id", "title", "message", "date"]
+    },
+    "ContactEnquiry": {
+      "title": "ContactEnquiry",
+      "description": "Public admission enquiry and contact message",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "course": { "type": "string" },
+        "message": { "type": "string" },
+        "submittedAt": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "name", "phone", "message"]
+    },
+    "CourseReview": {
+      "title": "CourseReview",
+      "description": "Verified student course review and rating",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "courseId": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "userId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "avatar": { "type": "string" },
+        "rating": { "type": "number" },
+        "batch": { "type": "string" },
+        "reviewText": { "type": "string" },
+        "helpfulCount": { "type": "number" },
+        "verified": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "courseId", "courseTitle", "studentName", "rating", "reviewText"]
+    },
+    "InstituteReview": {
+      "title": "InstituteReview",
+      "description": "Verified student review and rating for Oritech Computer institute",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "avatar": { "type": "string" },
+        "rating": { "type": "number" },
+        "roleOrCompany": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "reviewText": { "type": "string" },
+        "batchYear": { "type": "string" },
+        "verified": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "studentName", "rating", "reviewText"]
+    },
+    "SliderImage": {
+      "title": "SliderImage",
+      "description": "Hero carousel slider banner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "badgeText": { "type": "string" },
+        "order": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "imageUrl", "title"]
+    },
+    "BrandLogo": {
+      "title": "BrandLogo",
+      "description": "Institute brand logo image link",
+      "type": "object",
+      "properties": {
+        "logoUrl": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": []
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Admitted students directory"
+    },
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Available coaching courses"
+    },
+    "/payments/{paymentId}": {
+      "schema": "PaymentInstallment",
+      "description": "Fee payments and receipts"
+    },
+    "/results/{resultId}": {
+      "schema": "StudentResult",
+      "description": "Published student exam marks and grades"
+    },
+    "/certificates/{certificateId}": {
+      "schema": "CertificateRecord",
+      "description": "Issued student course completion certificates"
+    },
+    "/resources/{resourceId}": {
+      "schema": "LearningResource",
+      "description": "Study materials and lecture videos"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "NotificationAnnouncement",
+      "description": "Institute announcements and alerts"
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": "ContactEnquiry",
+      "description": "Prospective student enquiries"
+    },
+    "/courseReviews/{reviewId}": {
+      "schema": "CourseReview",
+      "description": "Verified student course reviews"
+    },
+    "/instituteReviews/{reviewId}": {
+      "schema": "InstituteReview",
+      "description": "Verified student institute testimonials"
+    },
+    "/sliderImages/{sliderId}": {
+      "schema": "SliderImage",
+      "description": "Homepage slider images"
+    },
+    "/branding/{brandingId}": {
+      "schema": "BrandLogo",
+      "description": "Institute brand logo link"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Students collection
+    match /students/{studentId} {
+      allow read, write: if true;
+    }
+
+    // Courses collection
+    match /courses/{courseId} {
+      allow read, write: if true;
+    }
+
+    // Fee Payments & Receipts
+    match /payments/{paymentId} {
+      allow read, write: if true;
+    }
+
+    // Exam Results
+    match /results/{resultId} {
+      allow read, write: if true;
+    }
+
+    // Issued Certificates
+    match /certificates/{certificateId} {
+      allow read, write: if true;
+    }
+
+    // Course Uploaded Video and PDF Links (Resources & Course Materials)
+    match /resources/{resourceId} {
+      allow read, write: if true;
+    }
+
+    match /courseMaterials/{materialId} {
+      allow read, write: if true;
+    }
+
+    // Notice Board & Announcements
+    match /notifications/{notificationId} {
+      allow read, write: if true;
+    }
+
+    // Admission & Contact Enquiries
+    match /enquiries/{enquiryId} {
+      allow read, write: if true;
+    }
+
+    // Slider Images
+    match /sliderImages/{sliderId} {
+      allow read, write: if true;
+    }
+
+    // Reviews & Testimonials
+    match /courseReviews/{reviewId} {
+      allow read, write: if true;
+    }
+
+    match /instituteReviews/{reviewId} {
+      allow read, write: if true;
+    }
+
+    // Branding & Institute Settings
+    match /settings/{settingId} {
+      allow read, write: if true;
+    }
+
+    match /branding/{brandingId} {
+      allow read, write: if true;
+    }
+
+    // Default fallback
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
