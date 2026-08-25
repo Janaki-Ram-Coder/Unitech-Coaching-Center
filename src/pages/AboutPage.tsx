@@ -98,7 +98,7 @@ export const AboutPage: React.FC = () => {
       <div className="p-8 bg-stone-950 text-white border-2 border-orange-500/40 rounded-3xl flex flex-col md:flex-row items-center gap-8 shadow-lg">
         <div className="w-32 h-32 rounded-2xl overflow-hidden border-2 border-amber-400 shrink-0 bg-white shadow-md">
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+            src="https://i.ibb.co/wrBKK21q/Whats-App-Image-2026-08-24-at-5-19-21-PM.jpg"
             alt="Director"
             className="w-full h-full object-cover"
           />
@@ -109,7 +109,7 @@ export const AboutPage: React.FC = () => {
           <p className="text-xs text-stone-300 leading-relaxed">
             At Oritech Computer, our core philosophy centers on practical execution. Every student works on real projects, writes live code, and handles real accounting books. We welcome you to experience practical learning with us.
           </p>
-          <p className="text-xs font-bold text-amber-400 font-mono">— Er. Rajesh V. Sharma (M.Tech Computer Science)</p>
+          <p className="text-xs font-bold text-amber-400 font-mono"> Rajesh Naidu (B.tech ECE)</p>
         </div>
       </div>
     </div>
