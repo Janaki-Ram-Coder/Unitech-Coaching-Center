@@ -16,7 +16,7 @@ import {
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { EnrolmentModal } from './components/EnrolmentModal';
-import { ScrollToTop } from './components/ScrollToTop';
+import { FloatingContactWidget } from './components/FloatingContactWidget';
 
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
@@ -398,8 +398,8 @@ export default function App() {
         />
       )}
 
-      {/* Floating Scroll To Top Button */}
-      <ScrollToTop />
+      {/* Floating Quick Contact Widget (Phone Call & WhatsApp) */}
+      <FloatingContactWidget />
     </div>
   );
 }

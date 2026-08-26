@@ -80,11 +80,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
           <div className="flex items-center gap-4 font-mono">
             <a
-              href={`tel:${(branding.contactPhone || '+919876543210').replace(/\s+/g, '')}`}
+              href={`tel:${(branding.contactPhone || '+919437235124').replace(/\s+/g, '')}`}
               className="flex items-center gap-1.5 hover:text-amber-400 font-bold text-white transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-amber-400" />
-              {branding.contactPhone || '+91 98765 43210'}
+              {branding.contactPhone || '+91 94372 35124'}
             </a>
             <span className="text-stone-400">Lab: 08:00 AM - 08:00 PM</span>
           </div>
