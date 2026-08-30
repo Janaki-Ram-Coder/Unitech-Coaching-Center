@@ -3,6 +3,7 @@ import { Course } from '../types';
 import { CourseReviews } from '../components/CourseReviews';
 import { CourseDetailSkeleton } from '../components/Skeleton';
 import { SEO } from '../components/SEO';
+import { formatImageUrl } from '../lib/imageUtils';
 import {
   Clock,
   ListChecks,
@@ -87,8 +88,11 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row items-center md:items-start gap-8">
           <div className="w-full md:w-80 h-56 md:h-60 rounded-2xl overflow-hidden border border-slate-200 shadow-md shrink-0 bg-slate-100">
             <img
-              src={course.thumbnail || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'}
+              src={formatImageUrl(course.thumbnail) || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'}
               alt={course.title || 'Course'}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80';
+              }}
               className="w-full h-full object-cover"
             />
           </div>

@@ -19,6 +19,7 @@ import {
   ArrowUp,
   ArrowDown,
   ListOrdered,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { Course } from '../../types';
 import { useToast } from '../../lib/ToastContext';
@@ -27,6 +28,8 @@ import {
   fsUpdateCourse,
   fsDeleteCourse,
 } from '../../lib/firestoreService';
+import { formatImageUrl } from '../../lib/imageUtils';
+import { ImageUploadField } from './ImageUploadField';
 
 interface CourseManagementProps {
   courses: Course[];
@@ -43,13 +46,7 @@ const DEFAULT_CATEGORIES = [
   'Data Science & AI',
 ];
 
-const PRESET_THUMBNAILS = [
-  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80',
-];
+const DEFAULT_COURSE_THUMBNAIL = 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80';
 
 export const CourseManagement: React.FC<CourseManagementProps> = ({
   courses,
@@ -78,7 +75,7 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({
   const [prerequisites, setPrerequisites] = useState('Basic Computer Literacy');
   const [description, setDescription] = useState('');
   const [modulesList, setModulesList] = useState<string[]>([]);
-  const [thumbnail, setThumbnail] = useState(PRESET_THUMBNAILS[0]);
+  const [thumbnail, setThumbnail] = useState('');
   const [popular, setPopular] = useState(false);
 
   const categories = ['All', ...Array.from(new Set(courses.map((c) => c.category).concat(DEFAULT_CATEGORIES)))];
@@ -94,7 +91,7 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({
     setPrerequisites('Basic Computer Literacy');
     setDescription('');
     setModulesList([]);
-    setThumbnail(PRESET_THUMBNAILS[Math.floor(Math.random() * PRESET_THUMBNAILS.length)]);
+    setThumbnail('');
     setPopular(false);
     setActionError('');
     setModalError('');
@@ -127,7 +124,7 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({
     }
     setModulesList(parsedSyllabus);
 
-    setThumbnail(course.thumbnail || PRESET_THUMBNAILS[0]);
+    setThumbnail(course.thumbnail || '');
     setPopular(course.popular || false);
     setActionError('');
     setModalError('');
@@ -199,7 +196,7 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({
       prerequisites: prerequisites.trim(),
       description: description.trim(),
       syllabus: validModules.length > 0 ? validModules : ['General Curriculum Modules'],
-      thumbnail: thumbnail.trim() || PRESET_THUMBNAILS[0],
+      thumbnail: thumbnail.trim() || DEFAULT_COURSE_THUMBNAIL,
       popular,
     };
 
@@ -389,8 +386,11 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({
               {/* Course Card Thumbnail */}
               <div className="relative h-44 w-full bg-slate-900 overflow-hidden">
                 <img
-                  src={course.thumbnail}
+                  src={formatImageUrl(course.thumbnail)}
                   alt={course.title}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = DEFAULT_COURSE_THUMBNAIL;
+                  }}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
@@ -783,35 +783,16 @@ export const CourseManagement: React.FC<CourseManagementProps> = ({
                 </div>
               </div>
 
-              {/* Thumbnail Selection */}
-              <div>
-                <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Thumbnail Image URL
-                </label>
-                <input
-                  type="url"
-                  value={thumbnail}
-                  onChange={(e) => setThumbnail(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs font-mono text-slate-900 focus:outline-none focus:border-indigo-600"
-                />
-
-                <div className="mt-2 flex items-center gap-2 overflow-x-auto pb-1">
-                  <span className="text-[11px] font-bold text-slate-500 shrink-0">Presets:</span>
-                  {PRESET_THUMBNAILS.map((img, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setThumbnail(img)}
-                      className={`w-10 h-8 rounded-lg overflow-hidden border-2 shrink-0 transition-all ${
-                        thumbnail === img ? 'border-indigo-600 scale-105' : 'border-transparent opacity-70 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={img} alt="Preset" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* Course Thumbnail Image Upload Field */}
+              <ImageUploadField
+                label="Course Thumbnail Image"
+                value={thumbnail}
+                onChange={setThumbnail}
+                required
+                shape="standard"
+                namePrefix="course-thumb"
+                helperText="Upload course cover image (JPG, PNG, WebP, SVG) or enter a custom link."
+              />
 
               {/* Featured / Popular Checkbox */}
               <div className="pt-2">

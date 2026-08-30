@@ -18,6 +18,7 @@ import { Course, SliderImage } from '../types';
 import { Testimonials } from '../components/Testimonials';
 import { HeroSliderSkeleton, CourseCardSkeleton } from '../components/Skeleton';
 import { SEO } from '../components/SEO';
+import { formatImageUrl } from '../lib/imageUtils';
 
 interface HomePageProps {
   sliderImages: SliderImage[];
@@ -109,8 +110,11 @@ export const HomePage: React.FC<HomePageProps> = ({
               }`}
             >
               <img
-                src={slide.imageUrl}
+                src={formatImageUrl(slide.imageUrl)}
                 alt={slide.title}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1600&q=80';
+                }}
                 className="w-full h-full object-cover opacity-75 sm:opacity-70 transform scale-105 transition-transform duration-10000"
               />
               {/* Base contrast gradient overlay */}
@@ -278,9 +282,18 @@ export const HomePage: React.FC<HomePageProps> = ({
               <CourseCardSkeleton />
             </>
           ) : !popularCourses || popularCourses.length === 0 ? (
-            <div className="col-span-full py-12 px-6 bg-white border border-stone-200 rounded-2xl text-center space-y-2">
-              <p className="text-sm font-bold text-stone-900">No courses listed yet</p>
-              <p className="text-xs text-stone-500 font-medium">New career programs will appear here once added in the Admin Panel.</p>
+            <div className="col-span-full py-12 px-6 bg-white border border-stone-200 rounded-2xl text-center space-y-3">
+              <p className="text-sm font-bold text-stone-900">No Featured Courses Selected</p>
+              <p className="text-xs text-stone-500 font-medium max-w-md mx-auto">
+                Only courses marked as <span className="font-semibold text-stone-700">"Popular / Featured Course on Homepage"</span> in the Admin Panel appear here.
+              </p>
+              <button
+                onClick={() => onNavigate('/courses')}
+                className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-orange-500/20 cursor-pointer"
+              >
+                <span>Browse All Courses in Course Catalog</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           ) : (
             popularCourses.map((course) => (
@@ -294,8 +307,11 @@ export const HomePage: React.FC<HomePageProps> = ({
                 >
                   <div className="relative h-48 overflow-hidden bg-stone-100">
                     <img
-                      src={course.thumbnail || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'}
+                      src={formatImageUrl(course.thumbnail) || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'}
                       alt={course.title || 'Course'}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80';
+                      }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-1 rounded-lg text-xs font-mono font-extrabold shadow-md">

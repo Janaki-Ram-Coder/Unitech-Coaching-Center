@@ -154,7 +154,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenEnroll }) => {
             </div>
             <div className="flex items-center gap-2.5">
               <Clock className="w-4 h-4 text-orange-400 shrink-0" />
-              <span>Mon - Sat: 08:00 AM - 08:00 PM</span>
+              <span>Mon - Sat: 07:00 AM - 08:00 PM</span>
             </div>
           </div>
         </div>

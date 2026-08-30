@@ -28,7 +28,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'unitech-secret-key-2026';
 const PORT = 3000;
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 import { sendOtpEmail } from './server/mailer.js';
 
@@ -2849,6 +2850,66 @@ app.post('/api/settings/branding', authenticateToken, requireAdmin, (req: Authen
     message: 'Institute logo and branding settings updated successfully!',
     branding: updated,
   });
+});
+
+// -------------------------------------------------------------
+// IMGBB IMAGE UPLOAD API
+// Converts uploaded image to permanent web URL using ImgBB API
+// -------------------------------------------------------------
+app.post('/api/upload-image', async (req: Request, res: Response) => {
+  try {
+    const { image, name } = req.body;
+    if (!image) {
+      return res.status(400).json({ success: false, error: 'No image data provided for upload' });
+    }
+
+    const IMGBB_API_KEY = process.env.IMGBB_API_KEY || 'c7d4b3605cae1a156001d0d39ce38c1f';
+
+    // Clean base64 string if it contains data URI header
+    let cleanBase64 = String(image).trim();
+    if (cleanBase64.includes(';base64,')) {
+      cleanBase64 = cleanBase64.split(';base64,')[1];
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('image', cleanBase64);
+    if (name) {
+      formData.append('name', String(name));
+    }
+
+    const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data: any = await imgbbRes.json();
+
+    if (data.success && data.data) {
+      // Use direct image URL or display URL from ImgBB
+      const finalUrl = data.data.url || data.data.display_url;
+      return res.json({
+        success: true,
+        url: finalUrl,
+        displayUrl: data.data.display_url || finalUrl,
+        thumbUrl: data.data.thumb?.url || finalUrl,
+        deleteUrl: data.data.delete_url,
+        data: data.data,
+      });
+    } else {
+      const errorMsg = data?.error?.message || 'ImgBB upload failed';
+      console.error('ImgBB API error response:', data);
+      return res.status(500).json({
+        success: false,
+        error: errorMsg,
+      });
+    }
+  } catch (err: any) {
+    console.error('Error uploading image to ImgBB:', err);
+    return res.status(500).json({
+      success: false,
+      error: err?.message || 'Server error uploading image to ImgBB',
+    });
+  }
 });
 
 // -------------------------------------------------------------

@@ -15,6 +15,7 @@ import {
 import { InstituteBranding } from '../../types';
 import { fsGetBrandingSettings, fsSaveBrandingSettings, fsSubscribeBrandingSettings, DEFAULT_BRANDING } from '../../lib/firestoreService';
 import { useToast } from '../../lib/ToastContext';
+import { ImageUploadField } from './ImageUploadField';
 
 interface LogoManagementProps {
   onRefresh?: () => void;
@@ -143,49 +144,16 @@ export const LogoManagement: React.FC<LogoManagementProps> = ({ onRefresh }) => 
       {/* Main Single-Field Form Card */}
       <div className="bg-white border border-stone-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
         <form onSubmit={handleSave} className="space-y-6">
-          {/* THE SINGLE REQUIRED FIELD: LOGO IMAGE LINK */}
+          {/* THE SINGLE REQUIRED FIELD: LOGO IMAGE UPLOADER */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label
-                htmlFor="admin-logo-url-input"
-                className="block text-xs font-extrabold text-stone-900 uppercase tracking-wider"
-              >
-                Logo Image Link (URL) <span className="text-orange-600 font-bold">*</span>
-              </label>
-              {isDirty && (
-                <span className="text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-300 px-2 py-0.5 rounded-md">
-                  Unsaved Changes
-                </span>
-              )}
-            </div>
-
-            <div className="relative">
-              <input
-                id="admin-logo-url-input"
-                type="url"
-                value={logoUrl}
-                onChange={(e) => handleUrlChange(e.target.value)}
-                placeholder="https://example.com/images/oritech-logo.png"
-                className="w-full pl-4 pr-12 py-3.5 bg-stone-50 border-2 border-stone-300 rounded-2xl text-sm font-medium text-stone-900 placeholder:text-stone-400 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/15 outline-none transition-all"
-              />
-              {hasEnteredUrl && (
-                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                  <a
-                    href={logoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 text-stone-400 hover:text-stone-700 transition-colors"
-                    title="Open link in new tab"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              )}
-            </div>
-
-            <p className="text-[11px] text-stone-500 mt-2 font-medium leading-relaxed">
-              Enter any direct image link (<code className="text-orange-700 bg-orange-50 px-1 py-0.5 rounded">.png</code>, <code className="text-orange-700 bg-orange-50 px-1 py-0.5 rounded">.jpg</code>, <code className="text-orange-700 bg-orange-50 px-1 py-0.5 rounded">.webp</code>, or <code className="text-orange-700 bg-orange-50 px-1 py-0.5 rounded">.svg</code>). PNG with transparent background looks best on both light and dark themes.
-            </p>
+            <ImageUploadField
+              label="Institute Brand Logo"
+              value={logoUrl}
+              onChange={handleUrlChange}
+              shape="logo"
+              namePrefix="institute-logo"
+              helperText="Upload transparent PNG or SVG logo for top Navbar, Footer, and Sign-in screens."
+            />
           </div>
 
           {/* Action Buttons */}

@@ -29,6 +29,7 @@ import {
   fsDeleteCertificate,
 } from '../../lib/firestoreService';
 import { useToast } from '../../lib/ToastContext';
+import { ImageUploadField } from './ImageUploadField';
 
 interface CertificateManagementProps {
   students: Student[];
@@ -662,25 +663,17 @@ export const CertificateManagement: React.FC<CertificateManagementProps> = ({
                 </div>
               </div>
 
-              {/* Certificate URL / Link (Without quick presets) */}
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
-                <label className="block text-xs font-bold text-slate-800">
-                  Certificate File Link / Hosted Image URL *
-                </label>
-                <div className="relative">
-                  <Image className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type="url"
-                    required
-                    value={certificateUrl}
-                    onChange={(e) => setCertificateUrl(e.target.value)}
-                    placeholder="https://drive.google.com/... or hosted image/pdf link (.jpg, .png, .webp)"
-                    className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs font-mono font-medium text-slate-900 focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  />
-                </div>
-                <p className="text-[11px] text-slate-500">
-                  Direct image links (.jpg, .png, .webp) or high-resolution document URLs.
-                </p>
+              {/* Certificate File / Image Upload Section */}
+              <div>
+                <ImageUploadField
+                  label="Certificate Document / Image File"
+                  value={certificateUrl}
+                  onChange={setCertificateUrl}
+                  required
+                  shape="certificate"
+                  namePrefix={`cert-${rollNumber || 'file'}`}
+                  helperText="Upload official digital certificate (JPG, PNG, WebP) or enter document link."
+                />
               </div>
 
               {/* Remarks */}
@@ -955,15 +948,14 @@ export const CertificateManagement: React.FC<CertificateManagementProps> = ({
 
             <form onSubmit={handleSaveEdit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Certificate File Link / Image URL
-                </label>
-                <input
-                  type="url"
-                  required
+                <ImageUploadField
+                  label="Certificate File / Document *"
                   value={editCertUrl}
-                  onChange={(e) => setEditCertUrl(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-mono text-slate-900"
+                  onChange={setEditCertUrl}
+                  required
+                  shape="certificate"
+                  namePrefix={`cert-${editingCert?.rollNumber || 'doc'}`}
+                  compact
                 />
               </div>
 

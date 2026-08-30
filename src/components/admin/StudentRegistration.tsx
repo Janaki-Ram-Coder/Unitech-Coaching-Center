@@ -35,6 +35,7 @@ import { registerStudentWithFirebaseAuth, deleteStudentFromFirebaseAuth } from '
 import { fsSubscribeStudents, fsSaveStudent, fsGenerateNextRollNumber, fsIsRollNumberTaken } from '../../lib/firestoreService';
 import { StudentShareModal } from './StudentShareModal';
 import { useToast } from '../../lib/ToastContext';
+import { ImageUploadField } from './ImageUploadField';
 
 interface StudentRegistrationProps {
   courses: Course[];
@@ -642,44 +643,16 @@ export const StudentRegistration: React.FC<StudentRegistrationProps> = ({
                     )}
                   </div>
 
-                  {/* Profile Image Link Field */}
+                  {/* Profile Image Upload Section */}
                   <div className="sm:col-span-2">
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-bold text-slate-700">
-                        Profile Image Link / Photo URL (Optional)
-                      </label>
-                      <span className="text-[11px] font-medium text-slate-500">
-                        Direct image link (JPG, PNG, WebP)
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="relative flex-1">
-                        <Globe className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input
-                          type="url"
-                          value={profileLink}
-                          onChange={(e) => setProfileLink(e.target.value)}
-                          placeholder="https://images.unsplash.com/... or https://..."
-                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-3 py-3 text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:bg-white"
-                        />
-                      </div>
-                      {profileLink && (
-                        <div className="w-12 h-12 rounded-xl border-2 border-indigo-200 overflow-hidden bg-slate-100 shrink-0 flex items-center justify-center shadow-xs">
-                          <img
-                            src={profileLink}
-                            alt="Preview"
-                            className="w-full h-full object-cover"
-                            referrerPolicy="no-referrer"
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = 'none';
-                            }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-[11px] text-slate-500 mt-1">
-                      Displays student avatar in the directory, student portal dashboard, ID card, and results.
-                    </p>
+                    <ImageUploadField
+                      label="Student Profile Photo (Optional)"
+                      value={profileLink}
+                      onChange={setProfileLink}
+                      shape="avatar"
+                      namePrefix={`student-${name || 'photo'}`}
+                      helperText="Displays student avatar in directory, student portal dashboard, ID card, and results."
+                    />
                   </div>
                 </div>
               </div>
@@ -1102,17 +1075,14 @@ export const StudentRegistration: React.FC<StudentRegistrationProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Student Profile Link / Photo URL</label>
-                <div className="relative">
-                  <Globe className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type="url"
-                    value={editProfileLink}
-                    onChange={(e) => setEditProfileLink(e.target.value)}
-                    placeholder="https://..."
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-900"
-                  />
-                </div>
+                <ImageUploadField
+                  label="Student Profile Photo (Optional)"
+                  value={editProfileLink}
+                  onChange={setEditProfileLink}
+                  shape="avatar"
+                  namePrefix={`student-${editName || 'avatar'}`}
+                  compact
+                />
               </div>
 
               <div>
@@ -1145,7 +1115,7 @@ export const StudentRegistration: React.FC<StudentRegistrationProps> = ({
                     </div>
                     <div>
                       <div className="text-xs font-black text-amber-950 uppercase tracking-wider">
-                        Official Certificate File Link & Verification
+                        Official Certificate File & Verification
                       </div>
                       <div className="text-[11px] text-amber-800">
                         Unlocked! Visible in student's dashboard for download & publicly verifiable by Roll Number.
@@ -1154,19 +1124,14 @@ export const StudentRegistration: React.FC<StudentRegistrationProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-amber-950 mb-1">
-                      Certificate File Link / Image URL *
-                    </label>
-                    <div className="relative">
-                      <Globe className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-amber-600" />
-                      <input
-                        type="url"
-                        value={editCertificateUrl}
-                        onChange={(e) => setEditCertificateUrl(e.target.value)}
-                        placeholder="https://images.unsplash.com/... or Google Drive / Cloud URL"
-                        className="w-full bg-white border border-amber-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 font-mono focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      />
-                    </div>
+                    <ImageUploadField
+                      label="Certificate Document / Image File *"
+                      value={editCertificateUrl}
+                      onChange={setEditCertificateUrl}
+                      shape="certificate"
+                      namePrefix={`cert-${editingStudent?.rollNumber || 'student'}`}
+                      compact
+                    />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">

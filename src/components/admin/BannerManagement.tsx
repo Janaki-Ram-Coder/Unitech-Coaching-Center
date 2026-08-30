@@ -26,6 +26,8 @@ import {
 } from 'lucide-react';
 import { SliderImage } from '../../types';
 import { useToast } from '../../lib/ToastContext';
+import { ImageUploadField } from './ImageUploadField';
+import { formatImageUrl } from '../../lib/imageUtils';
 import {
   fsGetSliderImages,
   fsSaveSliderImage,
@@ -50,37 +52,6 @@ interface MultiBannerRow {
   order: number;
   isValidUrl?: boolean;
 }
-
-const PRESET_BANNER_LINKS = [
-  {
-    title: 'Advanced Full Stack Web Development',
-    subtitle: 'Master React, Node.js, TypeScript & Cloud Deployment with 100% lab practice.',
-    imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1600&q=80',
-    ctaText: 'Explore Syllabus',
-    ctaLink: '/courses',
-  },
-  {
-    title: 'Python, Data Science & AI Masterclass',
-    subtitle: 'From core fundamentals to Machine Learning algorithms with industry mentorship.',
-    imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1600&q=80',
-    ctaText: 'View Batch Timings',
-    ctaLink: '/courses',
-  },
-  {
-    title: 'Hardware, Networking & Cloud Security',
-    subtitle: 'Hands-on practical workstation labs and ISO certified course completion certificates.',
-    imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80',
-    ctaText: 'Enroll Now',
-    ctaLink: '/contact',
-  },
-  {
-    title: 'Graphic Design & Digital Media Production',
-    subtitle: 'Learn Photoshop, Illustrator, UI/UX Design, and build a standout creative portfolio.',
-    imageUrl: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1600&q=80',
-    ctaText: 'Get Free Demo',
-    ctaLink: '/contact',
-  },
-];
 
 export const BannerManagement: React.FC<BannerManagementProps> = ({ onRefresh }) => {
   const toast = useToast();
@@ -747,50 +718,16 @@ export const BannerManagement: React.FC<BannerManagementProps> = ({ onRefresh })
             )}
 
             <form onSubmit={handleSubmitSingleBanner} className="space-y-4">
-              {/* Image URL Input */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-700">
-                  Image URL / Web Link <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <Link2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    type="url"
-                    required
-                    placeholder="https://images.unsplash.com/photo-..."
-                    value={formImageUrl}
-                    onChange={(e) => setFormImageUrl(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-xs sm:text-sm font-medium transition-all"
-                  />
-                </div>
-                <p className="text-[10px] text-slate-400 font-medium">
-                  Enter any public HTTPS image link from Unsplash, Cloudinary, AWS, or your website.
-                </p>
-              </div>
-
-              {/* Quick Preset Links Selector */}
-              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                <div className="flex items-center justify-between text-[11px] font-bold text-slate-600">
-                  <span>Quick Sample Image Links (Click to test):</span>
-                </div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {PRESET_BANNER_LINKS.map((preset, pIdx) => (
-                    <button
-                      key={pIdx}
-                      type="button"
-                      onClick={() => {
-                        setFormImageUrl(preset.imageUrl);
-                        if (!formTitle) setFormTitle(preset.title);
-                        if (!formSubtitle) setFormSubtitle(preset.subtitle);
-                        if (!formCtaText) setFormCtaText(preset.ctaText);
-                      }}
-                      className="p-2 rounded-xl bg-white hover:bg-indigo-50 border border-slate-200/80 text-left text-[10px] text-slate-700 hover:text-indigo-700 transition-all font-medium truncate cursor-pointer"
-                    >
-                      {preset.title}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* Banner Image Upload */}
+              <ImageUploadField
+                label="Banner Background Image"
+                value={formImageUrl}
+                onChange={setFormImageUrl}
+                required
+                shape="banner"
+                namePrefix="homepage-banner"
+                helperText="Upload high-resolution banner (16:9 or 21:9 landscape) or enter direct image URL."
+              />
 
               {/* Live Preview Box */}
               {formImageUrl && isValidUrl(formImageUrl) && (
@@ -1015,22 +952,16 @@ export const BannerManagement: React.FC<BannerManagementProps> = ({ onRefresh })
                     </button>
                   </div>
 
-                  {/* Row Image URL Input */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold text-slate-700">
-                      Image URL Link <span className="text-rose-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-                      <input
-                        type="url"
-                        placeholder="https://..."
-                        value={row.imageUrl}
-                        onChange={(e) => handleUpdateMultiRow(row.id, 'imageUrl', e.target.value)}
-                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-medium focus:border-indigo-500"
-                      />
-                    </div>
-                  </div>
+                  {/* Row Image Upload Field */}
+                  <ImageUploadField
+                    label={`Slot #${idx + 1} Image`}
+                    value={row.imageUrl}
+                    onChange={(val) => handleUpdateMultiRow(row.id, 'imageUrl', val)}
+                    required
+                    shape="banner"
+                    namePrefix={`banner-slot-${idx + 1}`}
+                    compact
+                  />
 
                   {/* Row Title & Subtitle */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

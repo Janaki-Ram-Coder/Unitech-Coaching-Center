@@ -256,9 +256,8 @@ export default function App() {
     handleNavigate('/results');
   };
 
-  const popularCourses = courses.length > 0
-    ? (courses.some((c) => c.popular) ? courses.filter((c) => c.popular) : courses)
-    : [];
+  // Only courses explicitly marked as Popular / Featured in Admin Course Management are shown on Homepage
+  const popularCourses = courses.filter((c) => Boolean(c.popular));
 
   const defaultSEO = getSEOForPath(currentPath);
 
@@ -297,7 +296,7 @@ export default function App() {
             {currentPath === '/' && (
               <HomePage
                 sliderImages={sliderImages}
-                popularCourses={popularCourses.length > 0 ? popularCourses : courses.slice(0, 3)}
+                popularCourses={popularCourses}
                 isLoading={isInitialLoading}
                 onNavigate={handleNavigate}
                 onOpenEnroll={handleOpenEnroll}

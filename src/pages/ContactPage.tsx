@@ -240,7 +240,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ courses }) => {
                 <Clock className="w-5 h-5 text-orange-600 shrink-0" />
                 <div>
                   <p className="font-extrabold text-stone-900 text-sm">Operating Hours</p>
-                  <p className="text-stone-600 font-medium">Monday - Saturday: 08:00 AM - 08:00 PM (Sunday Closed)</p>
+                  <p className="text-stone-600 font-medium">Monday - Saturday: 07:00 AM - 08:00 PM (Sunday Closed)</p>
                 </div>
               </div>
             </div>

@@ -7,7 +7,7 @@ export const AboutPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       <SEO
         title="About Us - ISO 9001:2015 Certified Institute"
-        description="Discover Oritech Computer: our mission, certified faculty, high-tech lab infrastructure, and government-recognized certifications empowering IT careers since 2011."
+        description="Discover Oritech Computer: our mission, certified faculty, high-tech lab infrastructure, and government-recognized certifications empowering IT careers since 2007."
         path="/about"
         keywords="About Oritech Computer, computer institute history, ISO 9001 certified computer institute, IT faculty, computer lab facility"
       />
@@ -19,7 +19,7 @@ export const AboutPage: React.FC = () => {
           <span>About Oritech Computer</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight">
-          Empowering IT Professionals & Careers Since 2011
+          Empowering IT Professionals & Careers Since 2007
         </h1>
         <p className="text-sm sm:text-base text-stone-600 leading-relaxed font-medium">
           Oritech Computer Training Institute is an ISO 9001:2015 certified center dedicated to high-impact technical education, practical hands-on laboratory learning, and industry placements.

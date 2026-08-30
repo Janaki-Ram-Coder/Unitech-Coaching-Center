@@ -20,6 +20,7 @@ import { Course, LearningResource, User, WatchProgress } from '../types';
 import { apiFetch } from '../lib/api';
 import { formatSeconds, formatRelativeTime } from '../lib/timeUtils';
 import { CourseLearningSkeleton } from '../components/Skeleton';
+import { formatImageUrl } from '../lib/imageUtils';
 
 interface CourseLearningPageProps {
   courseId?: string;
@@ -683,8 +684,11 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
             <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-3 bg-slate-50 relative overflow-hidden">
               {course.thumbnail && (
                 <img
-                  src={course.thumbnail}
+                  src={formatImageUrl(course.thumbnail)}
                   alt={course.title}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
                   className="absolute inset-0 w-full h-full object-cover opacity-20"
                 />
               )}
@@ -714,8 +718,11 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
             <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-3 bg-slate-50 relative overflow-hidden">
               {course.thumbnail && (
                 <img
-                  src={course.thumbnail}
+                  src={formatImageUrl(course.thumbnail)}
                   alt={course.title}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
                   className="absolute inset-0 w-full h-full object-cover opacity-15"
                 />
               )}

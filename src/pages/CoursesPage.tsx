@@ -3,6 +3,7 @@ import { Search, BookOpen, Clock, CheckCircle2, ChevronRight, Sparkles, Filter, 
 import { Course } from '../types';
 import { CourseCardSkeleton } from '../components/Skeleton';
 import { SEO } from '../components/SEO';
+import { formatImageUrl } from '../lib/imageUtils';
 
 interface CoursesPageProps {
   courses: Course[];
@@ -133,8 +134,11 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({
               >
                 <div className="relative h-48 overflow-hidden bg-stone-100">
                   <img
-                    src={course.thumbnail || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'}
+                    src={formatImageUrl(course.thumbnail) || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80'}
                     alt={course.title || 'Course'}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80';
+                    }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-1 rounded-lg text-sm font-mono font-extrabold shadow-md">
