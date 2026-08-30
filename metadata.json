@@ -1,6 +1,6 @@
 {
   "name": "Oritech Computer Institute",
-  "description": "Student and Admin Management System with course catalog, fee tracking, public certificate verify portal, certification uploader, and student learning portal for Oritech Computer.",
+  "description": "Best computer institute and training center in Rayagada offering DCA, PGDCA, Tally Prime with GST, Python, Web Development, and ISO 9001:2015 certified computer classes since 2007.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

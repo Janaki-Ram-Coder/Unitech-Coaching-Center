@@ -8,44 +8,44 @@ export interface RouteSEOConfig {
 }
 
 export const SITE_NAME = 'Oritech Computer';
-export const SITE_TAGLINE = 'Premier Computer Training & Certification Institute';
+export const SITE_TAGLINE = 'Best Computer Institute & Training Center in Rayagada';
 export const DEFAULT_OG_IMAGE = 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&h=630&q=80';
 
 export const ROUTE_SEO_MAP: Record<string, RouteSEOConfig> = {
   '/': {
-    title: `${SITE_NAME} - ${SITE_TAGLINE}`,
-    description: 'Join Oritech Computer for industry-leading computer courses including Python Full Stack, Web Development, DCA, PGDCA, Tally Prime with GST, and AI. ISO 9001:2015 Certified with 100% practical lab training.',
-    keywords: 'Oritech Computer, computer training institute, DCA course, PGDCA, Python training, web development institute, Tally Prime GST, computer classes near me, IT certification courses',
+    title: `Best Computer Institute in Rayagada | ${SITE_NAME} - Computer Training Center`,
+    description: 'Looking for the best computer institute in Rayagada? Oritech Computer is the #1 rated computer center in Rayagada offering DCA, PGDCA, Tally Prime with GST, Python, Web Development, and basic to advanced computer classes near you since 2007.',
+    keywords: 'best institute in Rayagada, computer center in Rayagada, computer institute in Rayagada, rayagada computer class, computer class near me, computer institute near me, best computer training center Rayagada, DCA course Rayagada, PGDCA institute Rayagada, Tally Prime GST classes Rayagada, Python institute Rayagada, Oritech Computer Rayagada, IT training center Odisha, computer coaching Convent Road Rayagada',
     ogType: 'website',
   },
   '/about': {
-    title: `About Us - ISO 9001:2015 Certified Institute | ${SITE_NAME}`,
-    description: 'Discover Oritech Computer: our mission, certified faculty, high-tech lab infrastructure, and government-recognized certifications empowering IT careers since 2011.',
-    keywords: 'About Oritech Computer, computer institute history, ISO 9001 certified computer institute, IT faculty, computer lab facility',
+    title: `About Us - #1 Computer Institute in Rayagada Since 2007 | ${SITE_NAME}`,
+    description: 'Discover Oritech Computer: Rayagada’s premier ISO 9001:2015 certified computer training center since 2007. Offering certified IT faculty, high-tech practical lab infrastructure, and government-recognized diplomas in Rayagada, Odisha.',
+    keywords: 'About Oritech Computer, best institute in Rayagada, computer center in Rayagada, computer institute history Rayagada, ISO 9001 certified computer institute, IT faculty Rayagada, computer lab facility',
     ogType: 'website',
   },
   '/courses': {
-    title: `Computer Courses & Certifications - DCA, PGDCA, Python, Tally | ${SITE_NAME}`,
-    description: 'Explore comprehensive computer courses at Oritech Computer: DCA, PGDCA, Python Full Stack, Web Development, Tally Prime with GST, and AI. Learn with hands-on projects and industry certifications.',
-    keywords: 'computer courses catalog, DCA syllabus, PGDCA admission, Python programming course, Tally Prime course, Web design classes, Oritech Computer courses',
+    title: `Computer Courses in Rayagada - DCA, PGDCA, Tally Prime, Python | ${SITE_NAME}`,
+    description: 'Browse all computer courses in Rayagada at Oritech Computer. Enroll in DCA, PGDCA, Python Full Stack, Web Development, Tally Prime with GST, Java, AutoCAD, and Graphic Design with 100% practical lab training and certification.',
+    keywords: 'computer courses in Rayagada, DCA course in Rayagada, PGDCA admission Rayagada, Tally Prime course Rayagada, Python coding class Rayagada, computer class near me, rayagada computer class, best institute in Rayagada, Oritech Computer courses',
     ogType: 'website',
   },
   '/course-detail': {
-    title: `Course Syllabus & Admission Details | ${SITE_NAME}`,
-    description: 'Explore detailed course curriculum, duration, batch timings, hands-on lab modules, and recognized certifications at Oritech Computer.',
-    keywords: 'course syllabus, curriculum, batch timings, admission, certificate, Oritech Computer',
+    title: `Course Syllabus & Admission Details | ${SITE_NAME} Rayagada`,
+    description: 'Explore detailed course curriculum, fees, batch timings, practical lab projects, and recognized certificates at Oritech Computer Institute Rayagada.',
+    keywords: 'course syllabus Rayagada, computer class fees Rayagada, batch timings, admission, certificate, Oritech Computer Rayagada',
     ogType: 'article',
   },
   '/contact': {
-    title: `Contact Us & Campus Location | ${SITE_NAME}`,
-    description: 'Get in touch with Oritech Computer. Visit our campus, contact our admissions counselors, call +91 9437235124, or send an online enquiry for batch timings.',
-    keywords: 'contact Oritech Computer, institute address, phone number, admissions enquiry, computer center location',
+    title: `Contact Oritech Computer Rayagada | Computer Center Near Convent Road`,
+    description: 'Visit Oritech Computer Training Institute in Rayagada, Odisha at Sharma Complex, Beside Hotel Jyoti Mahal, Convent Road. Call +91 9437235124 or email us for admissions, batch timings & free demo class.',
+    keywords: 'contact Oritech Computer, computer center in Rayagada address, computer institute in Rayagada phone number, Convent Road computer class, computer class near me, Rayagada computer center contact',
     ogType: 'website',
   },
   '/results': {
-    title: `Certificate Verification & Student Results | ${SITE_NAME}`,
-    description: 'Verify official student certificates, completion diplomas, and academic transcripts issued by Oritech Computer. Instant online credential verification.',
-    keywords: 'certificate verification, verify diploma, student marksheet, roll number search, Oritech Computer results',
+    title: `Certificate Verification & Student Results | ${SITE_NAME} Rayagada`,
+    description: 'Verify official computer diploma certificates, marksheets, and academic credentials issued by Oritech Computer Training Institute Rayagada. Instant 24/7 online certificate verification.',
+    keywords: 'certificate verification Rayagada, verify computer diploma, student marksheet Rayagada, roll number search, Oritech Computer results, ISO 9001 certificate check',
     ogType: 'website',
   },
   '/student/dashboard': {
@@ -74,15 +74,15 @@ export const ROUTE_SEO_MAP: Record<string, RouteSEOConfig> = {
     noIndex: true,
   },
   '/login': {
-    title: `Student & Admin Login | ${SITE_NAME}`,
-    description: 'Sign in to your Oritech Computer student dashboard or staff management console.',
-    keywords: 'student login, admin login, Oritech Computer sign in',
+    title: `Student & Admin Login | ${SITE_NAME} Rayagada`,
+    description: 'Sign in to your Oritech Computer student dashboard or staff management console in Rayagada.',
+    keywords: 'student login Rayagada, admin login, Oritech Computer sign in',
     ogType: 'website',
   },
   '/register': {
-    title: `Student Account Registration | ${SITE_NAME}`,
-    description: 'Create a new student account to access course materials, progress tracking, and batch updates at Oritech Computer.',
-    keywords: 'student registration, sign up, Oritech Computer',
+    title: `Student Account Registration | ${SITE_NAME} Rayagada`,
+    description: 'Create a new student account to access course materials, progress tracking, and batch updates at Oritech Computer Rayagada.',
+    keywords: 'student registration, sign up, Oritech Computer Rayagada, computer class admission',
     ogType: 'website',
   },
   '/verify-otp': {
@@ -103,8 +103,9 @@ export function getSEOForPath(pathname: string): RouteSEOConfig {
   // Prefix checks for dynamic routes like /courses/:id or /student/*
   if (normalizedPath.startsWith('/courses/')) {
     return {
-      title: `Course Syllabus & Admission | ${SITE_NAME}`,
-      description: 'Explore comprehensive course curriculum, practical training modules, and certificate details at Oritech Computer.',
+      title: `Course Syllabus & Admission | ${SITE_NAME} Rayagada`,
+      description: 'Explore comprehensive course curriculum, practical training modules, and certificate details at Oritech Computer Institute in Rayagada.',
+      keywords: 'best institute in Rayagada, computer center in Rayagada, computer institute in Rayagada, rayagada computer class, computer class near me',
       ogType: 'article',
     };
   }
@@ -119,7 +120,9 @@ export function getSEOForPath(pathname: string): RouteSEOConfig {
 
   return {
     title: `${SITE_NAME} - ${SITE_TAGLINE}`,
-    description: 'Join Oritech Computer for industry-leading computer courses and ISO 9001:2015 recognized certifications.',
+    description: 'Join Oritech Computer, the best computer institute in Rayagada offering DCA, PGDCA, Tally Prime with GST, Python, and ISO 9001:2015 recognized certifications since 2007.',
+    keywords: 'best institute in Rayagada, computer center in Rayagada, computer institute in Rayagada, rayagada computer class, computer class near me',
     ogType: 'website',
   };
 }
+

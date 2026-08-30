@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /courses
+Allow: /contact
+Allow: /results
+Allow: /login
+Allow: /register
+
+# Disallow private user dashboards and admin consoles
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /student/
+Disallow: /student/*
+Disallow: /verify-otp
+
+Sitemap: https://oritech.edu/sitemap.xml

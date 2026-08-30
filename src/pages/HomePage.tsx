@@ -13,6 +13,8 @@ import {
   ShieldCheck,
   Star,
   Sparkles,
+  HelpCircle,
+  ChevronDown,
 } from 'lucide-react';
 import { Course, SliderImage } from '../types';
 import { Testimonials } from '../components/Testimonials';
@@ -29,6 +31,34 @@ interface HomePageProps {
   onSelectCourse?: (course: Course) => void;
 }
 
+const FAQ_ITEMS = [
+  {
+    question: 'Which is the best computer institute in Rayagada, Odisha?',
+    answer:
+      'Oritech Computer Training Institute is widely recognized as the #1 best computer institute and premier computer center in Rayagada since 2007. Centrally located on Convent Road, New Colony, Oritech provides ISO 9001:2015 certified diplomas, 1-on-1 practical lab training on modern workstations, expert faculty, and placement assistance.',
+  },
+  {
+    question: 'What computer courses and classes are offered at Oritech Computer in Rayagada?',
+    answer:
+      'We offer government & corporate recognized IT courses including DCA (Diploma in Computer Application), PGDCA, Tally Prime with GST & e-Filing, Python Full Stack Development, Java Programming, Web Design & Full Stack Development, C/C++, AutoCAD, Graphic Design (Photoshop/Illustrator), and Basic Computer Literacy.',
+  },
+  {
+    question: 'Are certificates from Oritech Computer valid for Government jobs and private companies?',
+    answer:
+      'Yes, absolutely. All certificates and diplomas issued by Oritech Computer are ISO 9001:2015 certified and recognized across Government job applications, PSU examinations, MNCs, private enterprises, and higher education. Every certificate comes with a unique roll number verifiable 24/7 on our online portal.',
+  },
+  {
+    question: 'What are the batch timings and computer lab hours at Oritech Computer Rayagada?',
+    answer:
+      'Our institute is open Monday through Saturday from 07:00 AM to 08:00 PM. We offer flexible morning, afternoon, evening, and weekend batches tailored for school students, college undergraduates, job aspirants, and working professionals.',
+  },
+  {
+    question: 'Where is Oritech Computer located in Rayagada and how can I get admission?',
+    answer:
+      'We are conveniently located at Sharma Complex, Beside Hotel Jyoti Mahal, Convent Road, New Colony, Rayagada, Odisha - 765001. You can visit our campus for a free counseling session, call +91 9437235124, or click Enroll Now to register online immediately.',
+  },
+];
+
 export const HomePage: React.FC<HomePageProps> = ({
   sliderImages,
   popularCourses,
@@ -38,6 +68,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onSelectCourse,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const activeSlides = useMemo(() => {
     if (!sliderImages || sliderImages.length === 0) return [];
@@ -88,13 +119,28 @@ export const HomePage: React.FC<HomePageProps> = ({
     },
   ];
 
+  // FAQ Schema for Google Search Rich Results
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ_ITEMS.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+
   return (
     <div className="space-y-12 pb-16">
       <SEO
-        title="Oritech Computer - Premier Computer Training & Certification Institute"
-        description="Join Oritech Computer for industry-leading computer courses: Python Full Stack, Web Development, DCA, PGDCA, Tally Prime with GST, and AI. ISO 9001:2015 Certified with 100% practical training."
+        title="Best Computer Institute in Rayagada | Oritech Computer - Top Training Center"
+        description="Looking for the best computer institute in Rayagada? Oritech Computer is the #1 rated computer center in Rayagada offering DCA, PGDCA, Tally Prime with GST, Python, Web Development, Java & practical computer classes near you since 2007."
         path="/"
-        keywords="Oritech Computer, computer training institute, DCA course, PGDCA, Python full stack, Tally Prime GST, computer classes near me, coding institute"
+        keywords="best institute in Rayagada, computer center in Rayagada, computer institute in Rayagada, rayagada computer class, computer class near me, computer institute near me, best computer training center Rayagada, DCA course Rayagada, PGDCA institute Rayagada, Tally Prime GST classes Rayagada, Python institute Rayagada, Oritech Computer Rayagada, IT training center Odisha, computer coaching Convent Road Rayagada"
+        structuredData={faqSchema}
       />
 
       {/* 1. DYNAMIC HERO SLIDER CAROUSEL */}
@@ -353,8 +399,53 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 5. STUDENT TESTIMONIALS & SOCIAL PROOF */}
+      {/* 5. STUDENT TESTIMONIALS & REVIEWS */}
       <Testimonials onOpenEnroll={() => onOpenEnroll()} onNavigate={onNavigate} />
+
+      {/* 6. FREQUENTLY ASKED QUESTIONS (SEARCH RICH SNIPPETS) */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-600 uppercase tracking-widest">
+            <HelpCircle className="w-4 h-4" />
+            <span>Search FAQs & Rayagada Admissions Guide</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black text-stone-900">
+            Frequently Asked Questions About Computer Classes in Rayagada
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-600 font-medium">
+            Everything you need to know about course admissions, fees, batch timings, and certification recognition in Rayagada.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          {FAQ_ITEMS.map((faq, fIdx) => (
+            <div
+              key={fIdx}
+              className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-2xs transition-all"
+            >
+              <button
+                onClick={() => setOpenFaq(openFaq === fIdx ? null : fIdx)}
+                className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-stone-50 transition-colors"
+                aria-expanded={openFaq === fIdx}
+              >
+                <span className="text-xs sm:text-sm font-extrabold text-stone-900 leading-snug">
+                  {faq.question}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-stone-500 shrink-0 transition-transform duration-200 ${
+                    openFaq === fIdx ? 'rotate-180 text-orange-600' : ''
+                  }`}
+                />
+              </button>
+              {openFaq === fIdx && (
+                <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-stone-600 leading-relaxed border-t border-stone-100 pt-3">
+                  {faq.answer}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
