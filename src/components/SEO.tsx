@@ -215,6 +215,11 @@ export const SEO: React.FC<SEOProps> = ({
       {/* Canonical URL */}
       <link rel="canonical" href={effectiveCanonicalUrl} />
 
+      {/* Favicon & Web Application Icons */}
+      <link rel="icon" type="image/png" href="/logo/Oritech%20Logo.png" />
+      <link rel="shortcut icon" type="image/png" href="/logo/Oritech%20Logo.png" />
+      <link rel="apple-touch-icon" href="/logo/Oritech%20Logo.png" />
+
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={effectiveCanonicalUrl} />
